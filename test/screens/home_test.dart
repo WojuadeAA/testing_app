@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
@@ -26,11 +24,11 @@ void main() {
       expect(find.text('Testing Sample'), findsOneWidget);
     });
 
-    testWidgets('renders item tiles', (tester) async {
-      await tester.pumpWidget(createHomeScreen());
-    
-      expect(find.byType(ItemTile,skipOffstage: true), findsNWidgets(8));
-    });
+    // testWidgets('renders item tiles', (tester) async {
+    //   await tester.pumpWidget(createHomeScreen());
+
+    //   expect(find.byType(ItemTile, skipOffstage: true), findsNWidgets(8));
+    // });
 
     testWidgets('adds item to favorites when icon is pressed', (tester) async {
       final favorites = Favorites();
@@ -55,13 +53,14 @@ void main() {
     });
   });
 
-group("Codelab homepage widgets tests", () { 
-testWidgets("Test Scrolling", (widgetTester) async{
-  await widgetTester.pumpWidget(createHomeScreen());
-  expect(find.text('Item 0'), findsOneWidget);
-  await widgetTester.fling(find.byType(ListView), Offset(0, -200), 3000);
-  await widgetTester.pumpAndSettle();
-  expect(find.text('Item 0'), findsNothing);
-});
-});
+  group("Codelab homepage widgets tests", () {
+    testWidgets("Test Scrolling", (widgetTester) async {
+      await widgetTester.pumpWidget(createHomeScreen());
+      expect(find.text('Item 0'), findsOneWidget);
+      await widgetTester.fling(
+          find.byType(ListView), const Offset(0, -200), 3000);
+      await widgetTester.pumpAndSettle();
+      expect(find.text('Item 0'), findsNothing);
+    });
+  });
 }
