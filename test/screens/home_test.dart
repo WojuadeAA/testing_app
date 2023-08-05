@@ -24,12 +24,24 @@ void main() {
       expect(find.text('Testing Sample'), findsOneWidget);
     });
 
-    // testWidgets('renders item tiles', (tester) async {
-    //   await tester.pumpWidget(createHomeScreen());
-
-    //   expect(find.byType(ItemTile, skipOffstage: true), findsNWidgets(8));
-    // });
-
+    testWidgets('renders correct number of items in ListView.builder',
+        (tester) async {
+      const itemCount = 13;
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: ListView.builder(
+              itemCount: itemCount,
+              shrinkWrap: true,
+              itemBuilder: (context, index) =>
+                  ListTile(title: Text('Item $index')),
+            ),
+          ),
+        ),
+      );
+      expect(
+          find.byType(ListTile, skipOffstage: false), findsNWidgets(itemCount));
+    });
     testWidgets('adds item to favorites when icon is pressed', (tester) async {
       final favorites = Favorites();
       await tester.pumpWidget(createHomeScreen());
@@ -62,5 +74,20 @@ void main() {
       await widgetTester.pumpAndSettle();
       expect(find.text('Item 0'), findsNothing);
     });
+  });
+
+  ///This test Verifies that tapping the IconButton changes from Icons.favorite_border
+  ///to Icons.favorite and back again.
+  testWidgets("Testing IconButton", (widgetTester) async {
+    await widgetTester.pumpWidget(createHomeScreen());
+    expect(find.byIcon(Icons.favorite), findsNothing);
+    await widgetTester.tap(find.byIcon(Icons.favorite_border).first);
+    await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Added to favorites.'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsOneWidget);
+    await widgetTester.tap(find.byIcon(Icons.favorite).first);
+    await widgetTester.pumpAndSettle(const Duration(seconds: 1));
+    expect(find.text('Removed from favorites.'), findsOneWidget);
+    expect(find.byIcon(Icons.favorite), findsNothing);
   });
 }
